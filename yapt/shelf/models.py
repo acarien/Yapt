@@ -1,9 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.conf import settings
-
 from datetime import date, timedelta
-from itertools import ifilter
 
 # Duration
 class Duration(models.Model):

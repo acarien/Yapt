@@ -141,3 +141,7 @@ LOGGING = {
         },
     }
 }
+
+# Shelf
+HOMEPAGE_TOP_ITEMS = 10
+SEARCHPAGE_PAGING_SIZE = 20

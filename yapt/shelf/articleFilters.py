@@ -1,3 +1,7 @@
+from itertools import ifilter
+from shelf.models import Article, Duration
+from datetime import date, timedelta
+
 class KeepAllArticlesFilter:	
 	def get_articles(self):
 		return Article.objects.all()
@@ -68,12 +72,12 @@ class AlreadyReadArticlesFilter:
 
 class ArticleFilters:
 		Filters = {
-			1:KeepAllArticlesFilter(),
-			2:ArticlesDueFilter(),
-			3:OverdueArticlesFilter(),
-			4:ArticlesDueTomorrowFilter(),
-			5:ArticlesDueTenDaysFilter(),
-			6:AlreadyReadArticlesFilter(),
+			KeepAllArticlesFilter.name():KeepAllArticlesFilter(),
+			ArticlesDueFilter.name():ArticlesDueFilter(),
+			OverdueArticlesFilter.name():OverdueArticlesFilter(),
+			ArticlesDueTomorrowFilter.name():ArticlesDueTomorrowFilter(),
+			ArticlesDueTenDaysFilter.name():ArticlesDueTenDaysFilter(),
+			AlreadyReadArticlesFilter.name():AlreadyReadArticlesFilter(),
 		}	
 
 		@staticmethod
@@ -81,23 +85,12 @@ class ArticleFilters:
 			return ArticleFilters.Filters.items()
 
 		@staticmethod
-		def contains(filter_id):
-			return filter_id is not None and filter_id in ArticleFilters.Filters
+		def contains(filter_name):
+			return filter_name is not None and filter_name in ArticleFilters.Filters
 
 		@staticmethod
-		def get_filter(filter_id):
-			if not ArticleFilters.contains(filter_id):
-				raise KeyError('Unknown filter_id \'%s\'.' % filter_id)
+		def get_filter(filter_name):
+			if not ArticleFilters.contains(filter_name):
+				raise KeyError('Unknown filter_name \'%s\'.' % filter_name)
 
-			return ArticleFilters.Filters[filter_id]
-
-		@staticmethod
-		def get_filter_id(filter_name):
-			if filter_name is None:
-				return 1 #default in config
-
-			filter = next(ifilter(lambda (key, value): value.name() == filter_name, ArticleFilters.Filters.items()), None)
-			if filter is None:
-				return 1 #default in config
-			(key, value) = filter
-			return key
+			return ArticleFilters.Filters[filter_name]

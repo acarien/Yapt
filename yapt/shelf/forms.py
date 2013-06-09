@@ -61,12 +61,11 @@ class SearchForm(forms.Form):
 	paging = forms.CharField(widget=forms.HiddenInput, required=False)
 
 	def clean_filter(self):
-		filter_id = self.cleaned_data['filter']
-		if filter_id is None:
+		filter_name = self.cleaned_data['filter']
+		if filter_name is None:
 			raise forms.ValidationError("Filter has not a valid value.")
 
-		id = int(filter_id)
-		if not ArticleFilters.contains(id):
+		if not ArticleFilters.contains(filter_name):
 			raise forms.ValidationError("Filter has not a valid value.")
 
-		return id
+		return filter_name
