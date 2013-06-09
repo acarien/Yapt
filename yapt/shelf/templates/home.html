@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load shelf_filters %}
+
+{% block title %}Home{% endblock %}
+
+{% block navHome %}active{% endblock %}
+
+{% block content %}
+			<form action="" method="post"> {% csrf_token %}
+				<div class="row-fluid">	
+					<div class="span12">
+						<legend>Reading list</legend>												
+					</div>
+				</div>
+				{% if number_overrdue_articles > 0 %}
+					<div class="row-fluid">			
+						<div class="span12 text-center text-warning">
+							<h5>
+								<a href="{% url search 'overdue' %}">{{ number_overrdue_articles }} article{{number_overrdue_articles|pluralize}} {% if number_overrdue_articles == 1 %} is {% else %} are {% endif %} overdue.</a>
+							</h5>
+						</div>
+					</div>
+				{% endif %}
+				{% for article in articles %}	
+					{% ifchanged article.endDate|get_reading_date_string %}					
+						<div class="row-fluid">			
+							<div class="span12"><h5>{{ article.endDate|get_reading_date_string }}</h5></div>						
+						</div>
+	 				{% endifchanged %}
+					<div class="row-fluid">			
+						<div class="span4 wrap">
+							<a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+						</div>
+						<div class="span4"></div>
+						<div class="span3"></div>
+						<div class="span1">
+							<button value="{{ article.id }}" type="submit" name="delete" class="reset" title="Delete" onclick="return confirm('Do you want to delete the article \'{{ article.title }}\'?')"><i class="icon-trash"></i></button>
+							<a href="{% url edit article.id %}" title="Edit"><i class=" icon-edit"></i></a>
+							<button value="{{ article.id }}" type="submit" name="read" class="reset" title="Read" onclick="return confirm('Have you read the article \'{{ article.title }}\'?')"><i class="icon-ok"></i></button>
+						</div>
+					</div>	
+					{% empty %}
+					<div class="row-fluid">			
+						<div class="span12">No planned readings.</div>
+					</div>
+				{% endfor %}					
+			</form>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Edit article{% endblock %}
+{% block fakePages %}<li class="block fake-page-nav-item">Edit</li>{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+	$(function(){
+		date = $("#id_endDate").val();
+		$("#id_endDate").datepicker();
+	});
+</script>
+
+	<form action="" method="post" class="form-horizontal">
+		{% csrf_token %}
+		<legend class="dataCmd">
+			<span class="title">Edit</span>
+			<button id="save" name="save" title="Save" class="btn reset btn-default"><i class="icon-ok"></i></button>
+		</legend>
+		{% if messages %}
+		<div class="row-fluid">
+			<div class="span12 messages text-center">
+				{% for message in messages %}
+					<span{% if message.tags %} class="text-{{ message.tags }}"{% endif %}>{{ message }}</span>
+				{% endfor %}
+			</div>
+		</div>
+		{% endif %}
+		<fieldset>
+			{% for field in form.visible_fields %}
+				{% if forloop.counter0|divisibleby:"2" %}
+					<div class="row-fluid"> 
+				{% endif %}
+					<div class="control-group {% if not forloop.counter0|divisibleby:'2' %} right-panel {% endif %}{% if field.errors %} error {% endif %}">
+						<div class="span2"><label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label></div>
+						<div class="controls span4">
+							{{ field }}
+							{% if field.errors %}
+								{% for error in field.errors %}
+									<span class="help-inline error">{{ error }}</span>
+								{% endfor %}
+							{% endif %}
+						</div>
+					</div>
+				{% if not forloop.counter0|divisibleby:"2" or forloop.last%}
+					</div> 
+				{% endif %}
+			{% endfor %}	
+			
+			{% for key,value in readOnlyFields.items %}
+				{% if forloop.counter0|divisibleby:"2" %}
+					<div class="row-fluid"> 
+				{% endif %}				
+					<div class="control-group {% if not forloop.counter0|divisibleby:'2' %} right-panel {% endif %}">
+						<div class="span2"><label class="control-label" for="id_{{ key }}">{{ key }}</label></div>
+						<div class="controls span4 readonly">
+							{{ value|date:"d M Y" }}
+						</div>
+					</div>
+				{% if not forloop.counter0|divisibleby:"2" or forloop.last%}
+					</div> 
+				{% endif %}
+			{% endfor %}
+
+			{% for field in form.hidden_fields %}
+	      {{ field }}
+			{% endfor %}		
+		</fieldset>
+	</form>
+{% endblock %}
