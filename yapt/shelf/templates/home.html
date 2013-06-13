@@ -14,9 +14,9 @@
 				</div>
 				{% if number_overrdue_articles > 0 %}
 					<div class="row-fluid">			
-						<div class="span12 text-center text-warning">
+						<div class="span12 text-center">
 							<h5>
-								<a href="{% url search overdue_filter_name %}">{{ number_overrdue_articles }} article{{number_overrdue_articles|pluralize}} {% if number_overrdue_articles == 1 %} is {% else %} are {% endif %} overdue.</a>
+								<a href="{% url search overdue_filter_name %}" class="text-warning">{{ number_overrdue_articles }} article{{number_overrdue_articles|pluralize}} {% if number_overrdue_articles == 1 %} is {% else %} are {% endif %} overdue.</a>
 							</h5>
 						</div>
 					</div>
@@ -29,7 +29,7 @@
 	 				{% endifchanged %}
 					<div class="row-fluid">			
 						<div class="span4 wrap">
-							<a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+							<a href="{{ article.url }}" target="_blank" title="Due on {{ article.endDate }}"">{{ article.title }}</a>
 						</div>
 						<div class="span4"></div>
 						<div class="span3"></div>
